@@ -1,0 +1,17 @@
+ #grad{
+        background-image: linear-gradient(pink, yellow);
+        background-size: cover;
+    }
+    #pi{
+        
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    button{
+        background-image: linear-gradient(rgb(233, 16, 16), rgb(97, 3, 8));
+        border: 5px;
+        border-radius: 5%;
+        box-shadow: 5%;
+    }

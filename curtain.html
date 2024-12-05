@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>curtain</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: #fff991;
+            background-blend-mode: overlay;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav {
+            background-image: linear-gradient(#c6cd55, #c7d35c);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            margin-right: auto;
+            font-weight: bolder;
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .search-bar input[type="text"] {
+            padding: 8px;
+            width: 300px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ulist {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        
+        .list {
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #0b0b0b;
+            padding: 10px;
+            position: relative;
+            text-transform: none;
+            transition: all 0.3s ease;
+        }
+        
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        a:hover {
+            color: #f6f3f3;
+            text-transform: uppercase;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Hide Radio Buttons */
+        
+        .container input[type="radio"] {
+            display: none;
+        }
+        /* Sidebar Styles */
+        
+        .sidebar {
+            width: 250px;
+            background-color: #e5df74;
+            padding: 15px;
+            border-right: 1px solid #f7f185;
+        }
+        
+        .sidebar img {
+            border-radius: 60%;
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #333;
+        }
+        /* Category Labels as Buttons */
+        
+        .sidebar label {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #e7e170;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .sidebar label:hover {
+            background-color: #e9e252;
+        }
+        /* Highlight Selected Category */
+        
+        .container #category1:checked~.sidebar label[for="category1"],
+        .container #category2:checked~.sidebar label[for="category2"],
+        .container #category3:checked~.sidebar label[for="category3"],
+        .container #category4:checked~.sidebar label[for="category4"],
+        .container #category5:checked~.sidebar label[for="category5"] {
+            background-color: hsl(57, 85%, 70%);
+            color: #fff;
+        }
+        /* Products Section */
+        
+        .products {
+            flex: 1;
+            padding: 20px;
+            background-color: #f7f28b;
+        }
+        /* Hide All Product Lists Initially */
+        
+        .product-list {
+            display: none;
+        }
+        /* Show Product List When Corresponding Radio Button is Checked */
+        
+        .container #category1:checked~.products .category1,
+        .container #category2:checked~.products .category2,
+        .container #category3:checked~.products .category3,
+        .container #category4:checked~.products .category4,
+        .container #category5:checked~.products .category5 {
+            display: block;
+        }
+        /* Product Grid */
+        
+        .product-grid {
+            display: flex;
+            flex-wrap: wrap;
+            padding-left: 70px;
+            margin-left: 90px;
+            gap: 120px;
+        }
+        /* Product Card Styles */
+        
+        .product-card {
+            background-color: #cdc75f;
+            width: calc(33.333% - 20px);
+            border: 1px solid #e5e286;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            transition: box-shadow 0.3s;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .product-card h3 {
+            margin: 15px 0 10px;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .product-card p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 16px;
+        }
+        
+        .product-card .quick-view-btn {
+            padding: 8px 16px;
+            background-color: #dbd44e;
+            color: #121010;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .product-card .quick-view-btn:hover {
+            background-color: #f5f087;
+        }
+        /* Popup Overlay Styles */
+        
+        .popup-overlay {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        /* Popup Content Styles */
+        
+        .popup img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        
+        .popup .buy-now-btn {
+            margin-top: 10px;
+            font-size: large;
+            padding: 10px 25px;
+            background-color: #7b5b9c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .popup .buy-now-btn:hover {
+            background-color: #7b5b9c;
+        }
+        
+        .popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+        /* Animation for Popup */
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        /* Responsive Design */
+        
+        @media (max-width: 1024px) {
+            .product-card {
+                width: calc(50% - 20px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #fff;
+            }
+            .product-card {
+                width: 100%;
+            }
+        }
+        
+        footer {
+            background-image: linear-gradient(#c6cd55, #c7d35c);
+            color: #090909;
+            padding: 40px 0;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .footer-section {
+            flex: 1;
+            text-align: left;
+            padding: 0 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 10px;
+            color: #111112;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section ul li a {
+            color: #082338;
+            text-decoration: none;
+        }
+        
+        .footer-section ul li a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-media {
+            flex: 1;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .social-media h3 {
+            margin-bottom: 10px;
+            color: #171819;
+        }
+        
+        .social-media ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .social-media ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .social-media ul li a {
+            color: #c3d1dc;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        
+        .social-media ul li a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            flex: 1;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        @media only screen and (max-width: 768px) {
+            .footer-section,
+            .social-media {
+                flex: 1 1 100%;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            curtain equip
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+        </div>
+        <ul class="ulist">
+            <li class="list"><a href="index.html">Home</a></li>
+            <li class="list"><a href="#alpha">Products</a></li>
+            <li class="list"><a href="#ch1">Contact</a></li>
+            <li class="list"><a href="index.html">Reviews</a></li>
+            <li class="list"><a href="login.html">Login/Signup</a></li>
+        </ul>
+    </nav>
+    <div class="bg">
+        <div class="container">
+            <!-- Radio Inputs (Placed at the top level inside .container) -->
+            <input type="radio" name="category" id="category1" checked>
+            <input type="radio" name="category" id="category2">
+            <input type="radio" name="category" id="category3">
+            <input type="radio" name="category" id="category4">
+            <input type="radio" name="category" id="category5">
+
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h2>Categories</h2>
+                <label for="category1"><img src="Curtain\Cotton\Curtain 1\Blue\5ft\1.jpg" alt="" height="70" width="70">Cotton</label>
+                <label for="category2"><img src="Curtain\Polyster\Design 1\blue.jpg" alt="" height="70" width="70">Polyster</label>
+                <label for="category3"> <img src="Curtain\Satin\Design 1\Blush pink\1.jpg" alt="" height="70" width="70">Satin</label>
+                <label for="category4"><img src="Curtain\Silk\Design 1\Blue\1.jpg" alt="" height="70" width="70">Silk</label>
+                <label for="category5"> <img src="Curtain\Velvet\Design 1\Grey\1.jpg" alt="" height="70" width="70">Velvet</label>
+            </div>
+            <div class="products">
+                <div class="product-list category1">
+                    <center>
+                        <h2>COTTON</h2>
+                    </center>
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <img src="Curtain\Cotton\Curtain 1\Blue\5ft\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>COTTON</h3>
+                            <p>₹1500</p>
+                            <a href="a.html"><button class="quick-view-btn" data-title="COTTON" data-price="₹1500" data-image="Curtain\Cotton\Curtain 1\Blue\5ft\1.jpg">
+                                VIEW PRODUCT
+                               </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Cotton\Curtain 2\5ft\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>COTTON</h3>
+                            <p>₹1200</p>
+                            <a href="b.html"><button class="quick-view-btn" data-title="CLOTHING" data-price="₹1200" data-image="Curtain\Cotton\Curtain 2\5ft\1.jpg">
+                                VIEW PRODUCT
+                               </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Cotton\Curtain 3\Green\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>COTTON</h3>
+                            <p>₹1900</p>
+                            <a href="c.html"><button class="quick-view-btn" data-title="CLOTHING" data-price="₹1900" data-image="Curtain\Cotton\Curtain 3\Green\1.jpg">
+                                VIEW PRODUCT
+                               </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Cotton\Curtain 4\Grey\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>COTTON</h3>
+                            <p>₹1750</p>
+                            <a href="d.html"><button class="quick-view-btn" data-title="CLOTHING" data-price="₹1750" data-image="Curtain\Cotton\Curtain 4\Grey\1.jpg">
+                                VIEW PRODUCT
+                               </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-list category2">
+                    <center>
+                        <h2>POLYSTER</h2>
+                    </center>
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <img src="Curtain\Polyster\Design 1\beige.jpg" alt="Image 1" height="100" width="100">
+                            <h3>POLYSTER</h3>
+                            <p>₹1500</p>
+                            <a href="e.html"><button class="quick-view-btn" data-title="POLYSTER" data-price="₹1500" data-image="Curtain\Polyster\Design 1\beige.jpg">
+                                    VIEW PRODUCT
+                                   </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Polyster\Design 2\Blue\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>POLYSTER</h3>
+                            <p>₹1800</p>
+                            <a href="f.html"><button class="quick-view-btn" data-title="POLYSTER" data-price="₹1200" data-image="Curtain\Polyster\Design 2\Blue\5.jpg">
+                                    VIEW PRODUCT
+                                   </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Polyster\Design 3\Brown\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>POLYSTER</h3>
+                            <p>₹1900</p>
+                            <a href="g.html"> <button class="quick-view-btn" data-title="POLYSTER" data-price="₹1900" data-image="Curtain\Polyster\Design 3\Brown\1.jpg">
+                                    VIEW PRODUCT
+                                   </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Polyster\Design 4\Maroon\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>POLYSTER</h3>
+                            <p>₹1750</p>
+                            <a href="h.html"><button class="quick-view-btn" data-title="POLYSTER" data-price="₹1750" data-image="Curtain\Polyster\Design 4\Maroon\1.jpg">
+                                    VIEW PRODUCT
+                                   </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-list category3">
+                    <center>
+                        <h2>SATIN</h2>
+                    </center>
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <img src="Curtain\Satin\Design 1\Blush pink\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>SATIN</h3>
+                            <p>₹1500</p>
+                            <a href="i.html"><button class="quick-view-btn" data-title="SATIN" data-price="₹1500" data-image="Curtain\Satin\Design 1\Blush pink\1.jpg">
+                                        VIEW PRODUCT
+                                       </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Satin\Design 2\Grey\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>SATIN</h3>
+                            <p>₹1200</p>
+                            <a href="j.html"><button class="quick-view-btn" data-title="SATIN" data-price="₹1200" data-image="Curtain\Satin\Design 2\Grey\1.jpg">
+                                        VIEW PRODUCT
+                                       </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Satin\Design 3\Blue\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>SATIN</h3>
+                            <p>₹1900</p>
+                            <a href="k.html"><button class="quick-view-btn" data-title="SATIN" data-price="₹1900" data-image="Curtain\Satin\Design 3\Blue\1.jpg">
+                                        VIEW PRODUCT
+                                       </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Satin\Design 4\Beige\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>SATIN</h3>
+                            <p>₹1750</p>
+                            <a href="l.html"><button class="quick-view-btn" data-title="SATIN" data-price="₹1750" data-image="Curtain\Satin\Design 4\Beige\1.jpg">
+                                        VIEW PRODUCT
+                                       </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-list category4">
+                    <center>
+                        <h2>SILK</h2>
+                    </center>
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <img src="Curtain\Silk\Design 1\Red\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>SILK</h3>
+                            <p>₹1500</p>
+                            <a href="m.html"><button class="quick-view-btn" data-title="SILK" data-price="₹1500" data-image="Curtain\Silk\Design 1\Red\1.jpg">
+                                            VIEW PRODUCT
+                                           </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Silk\Design 2\Black\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>SILK</h3>
+                            <p>₹1200</p>
+                            <a href="n.html"><button class="quick-view-btn" data-title="SILK" data-price="₹1200" data-image="Curtain\Silk\Design 2\Black\1.jpg">
+                                            VIEW PRODUCT
+                                           </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Silk\Design 3\Peach\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>SILK</h3>
+                            <p>₹1900</p>
+                            <a href="o.html"><button class="quick-view-btn" data-title="SILK" data-price="₹1900" data-image="Curtain\Silk\Design 3\Peach\1.jpg">
+                                            VIEW PRODUCT
+                                           </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Silk\Design 4\White\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>SILK</h3>
+                            <p>₹1750</p>
+                            <a href="p.html"><button class="quick-view-btn" data-title="SILK" data-price="₹1750" data-image="Curtain\Silk\Design 4\White\1.jpg">
+                                            VIEW PRODUCT
+                                           </button></a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="product-list category5">
+                    <center>
+                        <h2>VELVET</h2>
+                    </center>
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <img src="Curtain\Velvet\Design 1\Pista\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>VELVET</h3>
+                            <p>₹1500</p>
+                            <a href="q.html"><button class="quick-view-btn" data-title="VELVET" data-price="₹1500" data-image="Curtain\Velvet\Design 1\Pista\1.jpg">
+                                            VIEW PRODUCT
+                                           </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Velvet\Design 2\Cocoa\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>VELVET</h3>
+                            <p>₹1200</p>
+                            <a href="r.html"><button class="quick-view-btn" data-title="VELVET" data-price="₹1200" data-image="Curtain\Velvet\Design 2\Cocoa\1.jpg">
+                                            VIEW PRODUCT
+                                           </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Velvet\Design 3\Aqua\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>VELVET</h3>
+                            <p>₹1900</p>
+                            <a href="s.html"><button class="quick-view-btn" data-title="VELVET" data-price="₹1900" data-image="Curtain\Velvet\Design 3\Aqua\1.jpg">
+                                            VIEW PRODUCT
+                                           </button></a>
+                        </div>
+                        <div class="product-card">
+                            <img src="Curtain\Velvet\Design 4\Lavender\1.jpg" alt="Image 1" height="100" width="100">
+                            <h3>VELVET</h3>
+                            <p>₹1750</p>
+                            <a href="t.html"><button class="quick-view-btn" data-title="VELVET" data-price="₹1750" data-image="Curtain\Velvet\Design 4\Lavender\1.jpg">
+                                            VIEW PRODUCT
+                                           </button></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Get to Know Us</h3>
+                <ul>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">About </a></li>
+                    <li><a href="#">Customer Relations</a></li>
+                    <li id="ch1">CONTACT US
+                        <p>+91 8448343405</p> <br>
+                    </li>
+                </ul>
+            </div>
+            <div class="social-media">
+                <h3>Follow Us</h3>
+                <ul>
+                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="#"><i class="fab fa-linkedin-in"></i></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2024 Curtain Company. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        // Get all "Quick View" buttons
+        const quickViewButtons = document.querySelectorAll('.quick-view-btn');
+
+        // Get popup elements
+        const popupOverlay = document.getElementById('popupOverlay');
+        const closeBtn = document.getElementById('closeBtn');
+        const popupImage = document.getElementById('popupImage');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupPrice = document.getElementById('popupPrice');
+        const popupDescription = document.getElementById('popupDescription');
+
+        // Function to open popup with product details
+        quickViewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const title = button.getAttribute('data-title');
+                const price = button.getAttribute('data-price');
+                const description = button.getAttribute('data-description');
+                const image = button.getAttribute('data-image');
+
+                popupImage.src = image;
+                popupTitle.textContent = title;
+                popupPrice.textContent = `Price: ${price}`;
+                popupDescription.textContent = description;
+
+                popupOverlay.style.display = 'flex';
+            });
+        });
+
+        // Function to close popup
+        const closePopup = () => {
+            popupOverlay.style.display = 'none';
+        };
+
+        // Event listener for close button
+        closeBtn.addEventListener('click', closePopup);
+
+        // Event listener for clicking outside the popup content
+        window.addEventListener('click', (e) => {
+            if (e.target === popupOverlay) {
+                closePopup();
+            }
+        });
+    </script>
+</body>
+
+</html>

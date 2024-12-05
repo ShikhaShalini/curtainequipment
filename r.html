@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>curtain</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: #fff991;
+            background-blend-mode: overlay;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav {
+            background-image: linear-gradient(#c6cd55, #c7d35c);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            margin-right: auto;
+            font-weight: bolder;
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .search-bar input[type="text"] {
+            padding: 8px;
+            width: 300px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ulist {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        
+        .list {
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #0b0b0b;
+            padding: 10px;
+            position: relative;
+            text-transform: none;
+            transition: all 0.3s ease;
+        }
+        
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        a:hover {
+            color: #f6f3f3;
+            text-transform: uppercase;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #3e93bb;
+            min-width: 100px;
+            z-index: 1;
+        }
+        
+        .dropdown-content a {
+            color: #020202;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #3e93bb;
+            color: #f6f3f3;
+        }
+        
+        .list:hover .dropdown-content {
+            display: block;
+            color: #f6f3f3;
+        }
+        
+        .product-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        /* Product Card */
+        
+        .product-card {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            width: 250px;
+            padding: 15px;
+            margin: 10px;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+        }
+        
+        .product-title {
+            font-size: 1.3em;
+            color: #111;
+            margin: 15px 0;
+        }
+        
+        .product-price {
+            font-size: 1.2em;
+            color: #b12704;
+            margin: 10px 0;
+        }
+        
+        .product-actions {
+            display: block;
+            align-items: center;
+            gap: 5px;
+            margin-top: 12px;
+        }
+        
+        .add-to-cart,
+        .buy-now {
+            background-color: #ff9900;
+            border: none;
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            width: 45%;
+        }
+        
+        .add-to-cart:hover,
+        .buy-now:hover {
+            background-color: #c7d35c;
+        }
+        
+        footer {
+            background-image: linear-gradient(#c6cd55, #c7d35c);
+            color: #090909;
+            padding: 40px 0;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 120px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .footer-section {
+            flex: 1;
+            text-align: left;
+            padding: 0 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 10px;
+            color: #111112;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section ul li a {
+            color: #082338;
+            text-decoration: none;
+        }
+        
+        .footer-section ul li a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-media {
+            flex: 1;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .social-media h3 {
+            margin-bottom: 10px;
+            color: #171819;
+        }
+        
+        .social-media ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .social-media ul li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .social-media ul li a {
+            color: #c3d1dc;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        
+        .social-media ul li a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            flex: 1;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        @media only screen and (max-width: 768px) {
+            .footer-section,
+            .social-media {
+                flex: 1 1 100%;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            curtain equip
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search...">
+        </div>
+        <ul class="ulist">
+            <li class="list"><a href="index.html">Home</a></li>
+            <li class="list"><a href="#alpha">Products</a></li>
+            <li class="list"><a href="#ch1">Contact</a></li>
+            <li class="list"><a href="index.html">Reviews</a></li>
+            <li class="list"><a href="login.html">Login/Signup</a></li>
+        </ul>
+    </nav> <br>
+    <div class="product-list">
+        <div class="product-card">
+            <img src="Curtain\Velvet\Design 2\Cocoa\1.jpg" alt="Product 1" class="product-image">
+            <h2 class="product-title">Velvet Cocoa Curtain</h2>
+            <p class="product-price">Rs.1200</p>
+            <div class="product-actions">
+                <button class="add-to-cart"><a href="r1.html">Checkout</a></button>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="Curtain\Velvet\Design 2\Green\1.jpg" alt="Product 2" class="product-image">
+            <h2 class="product-title">Velvet Green Curtain</h2>
+            <p class="product-price">Rs.1680</p>
+            <div class="product-actions">
+                <button class="add-to-cart"><a href="r2.html">Checkout</a></button>
+            </div>
+        </div>
+        <div class="product-card">
+            <img src="Curtain\Velvet\Design 2\Wine\1.jpg" alt="Product 2" class="product-image">
+            <h2 class="product-title">Velvet Wine Curtain</h2>
+            <p class="product-price">Rs.1500</p>
+
+            <div class="product-actions">
+                <button class="add-to-cart"><a href="r3.html">Checkout</a></button>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Get to Know Us</h3>
+                <ul>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">About </a></li>
+                    <li><a href="#">Customer Relations</a></li>
+                    <li id="ch1">CONTACT US
+                        <p>+91 8448343405</p> <br>
+                    </li>
+                </ul>
+            </div>
+            <div class="social-media">
+                <h3>Follow Us</h3>
+                <ul>
+                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="#"><i class="fab fa-linkedin-in"></i></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2024 Curtain Company. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>
